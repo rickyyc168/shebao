@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社保速查 - 五险一金政策指南</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-light:#dbeafe;--accent:#f59e0b;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--success:#10b981;--danger:#ef4444}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+/* Nav */
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-brand{font-size:18px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:8px 16px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;transition:.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--primary);background:var(--primary-light)}
+
+/* Sections */
+section{max-width:1100px;margin:0 auto;padding:40px 20px}
+.section-title{font-size:28px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.section-desc{color:var(--muted);margin-bottom:28px;font-size:15px}
+
+/* Hero */
+.hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(135deg,#eff6ff,#f0fdf4);border-radius:0 0 32px 32px}
+.hero h1{font-size:36px;font-weight:800;margin-bottom:12px}
+.hero h1 span{color:var(--primary)}
+.hero p{color:var(--muted);font-size:16px;max-width:600px;margin:0 auto 24px}
+.hero-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:700px;margin:0 auto}
+.hero-card{background:var(--card);border-radius:12px;padding:20px 16px;border:1px solid var(--border);text-align:center;cursor:pointer;transition:.2s}
+.hero-card:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(37,99,235,.1)}
+.hero-card .icon{font-size:28px;margin-bottom:8px}
+.hero-card .label{font-weight:600;font-size:15px}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;transition:.2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+
+/* Quick Reference */
+.ratio-table{width:100%;border-collapse:collapse;font-size:14px}
+.ratio-table th{background:var(--primary);color:#fff;padding:12px 16px;text-align:left;font-weight:600}
+.ratio-table th:first-child{border-radius:8px 0 0 0}
+.ratio-table th:last-child{border-radius:0 8px 0 0}
+.ratio-table td{padding:12px 16px;border-bottom:1px solid var(--border)}
+.ratio-table tr:last-child td{border-bottom:none}
+.ratio-table tr:hover td{background:#f8fafc}
+
+/* Timeline */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:20px}
+.timeline-item::before{content:'';position:absolute;left:-22px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2px solid #fff;box-shadow:0 0 0 2px var(--primary)}
+.timeline-item.red::before{background:var(--danger);box-shadow:0 0 0 2px var(--danger)}
+.timeline-item.yellow::before{background:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.timeline-year{font-weight:700;color:var(--primary);font-size:14px}
+.timeline-text{font-size:14px;color:var(--text);margin-top:2px}
+.timeline-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;margin-left:6px}
+.tag-law{background:#fef2f2;color:#dc2626}
+.tag-policy{background:#fefce8;color:#ca8a04}
+.tag-reform{background:#eff6ff;color:#2563eb}
+
+/* Calculator */
+.calc-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:13px;font-weight:600;color:var(--muted)}
+.form-group select,.form-group input{padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;outline:none;transition:.2s;background:var(--card)}
+.form-group select:focus,.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.calc-btn{grid-column:1/-1;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s}
+.calc-btn:hover{background:#1d4ed8}
+
+/* Result */
+.result{display:none;margin-top:20px}
+.result.show{display:block}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.result-stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.result-stat .val{font-size:24px;font-weight:800;margin-bottom:4px}
+.result-stat .lbl{font-size:12px;color:var(--muted)}
+.val.blue{color:var(--primary)}
+.val.green{color:var(--success)}
+.val.orange{color:var(--accent)}
+.detail-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:16px}
+.detail-table th{background:#f1f5f9;padding:10px 12px;text-align:left;font-weight:600;font-size:12px;color:var(--muted)}
+.detail-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.detail-table .total td{font-weight:700;background:#f8fafc}
+
+/* AI Chat */
+.ai-section{text-align:center;padding:40px 20px}
+.ai-card{max-width:500px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px 32px}
+.ai-avatar{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:32px}
+.ai-card h3{font-size:20px;margin-bottom:8px}
+.ai-card p{color:var(--muted);font-size:14px;margin-bottom:24px}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;transition:.2s}
+.ai-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(59,130,246,.3)}
+
+/* Change tags */
+.change-list{display:grid;gap:12px}
+.change-item{display:flex;gap:12px;align-items:flex-start;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px}
+.change-dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex-shrink:0}
+.dot-red{background:var(--danger)}
+.dot-yellow{background:var(--accent)}
+.dot-blue{background:var(--primary)}
+.change-item strong{display:block;margin-bottom:4px;font-size:15px}
+.change-item p{font-size:13px;color:var(--muted);margin:0}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab{padding:10px 20px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.2s}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:26px}
+  .hero-cards{grid-template-columns:1fr}
+  .calc-form{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .section-title{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+<div class="nav-inner">
+  <div class="nav-brand">🏛️ 社保速查</div>
+  <div class="nav-links">
+    <a href="#guide" class="active" onclick="scrollTo('guide')">社保速查</a>
+    <a href="#calc" onclick="scrollTo('calc')">计算器</a>
+    <a href="#ai" onclick="scrollTo('ai')">AI 问答</a>
+  </div>
+</div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>五险一金，<span>一目了然</span></h1>
+  <p>社保政策速查 · 费用精准计算 · AI 智能问答</p>
+  <div class="hero-cards">
+    <div class="hero-card" onclick="scrollTo('guide')">
+      <div class="icon">📋</div>
+      <div class="label">社保速查</div>
+    </div>
+    <div class="hero-card" onclick="scrollTo('calc')">
+      <div class="icon">🧮</div>
+      <div class="label">社保计算器</div>
+    </div>
+    <div class="hero-card" onclick="scrollTo('ai')">
+      <div class="icon">🤖</div>
+      <div class="label">AI 问答</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 1: 社保速查 -->
+<section id="guide">
+  <div class="section-title">📋 社保速查</div>
+  <div class="section-desc">五险一金是什么？缴费比例多少？2025年有什么新变化？</div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'tab-ratio')">缴费比例</div>
+    <div class="tab" onclick="switchTab(this,'tab-change')">2025新规</div>
+    <div class="tab" onclick="switchTab(this,'tab-timeline')">政策时间线</div>
+    <div class="tab" onclick="switchTab(this,'tab-rights')">维权指南</div>
+  </div>
+
+  <!-- 缴费比例 -->
+  <div id="tab-ratio" class="tab-content active">
+    <div class="card">
+      <table class="ratio-table">
+        <tr><th>险种</th><th>单位缴</th><th>个人缴</th><th>说明</th></tr>
+        <tr><td>🔵 养老保险</td><td>16%</td><td>8%</td><td>基数下限60%社平工资，上限300%</td></tr>
+        <tr><td>🟢 医疗保险</td><td>6%</td><td>2%</td><td>门诊纳入统筹，报销≥50%</td></tr>
+        <tr><td>🟡 失业保险</td><td>0.5%</td><td>0.5%</td><td>覆盖灵活就业</td></tr>
+        <tr><td>🔴 工伤保险</td><td>0.2%-1.9%</td><td>0%</td><td>行业浮动，覆盖新业态</td></tr>
+        <tr><td>🟣 生育保险</td><td>0.8%</td><td>0%</td><td>报销比例90%</td></tr>
+        <tr><td>🏠 住房公积金</td><td>5%-12%</td><td>5%-12%</td><td>购房贷款/租房提取</td></tr>
+      </table>
+    </div>
+    <div class="card" style="font-size:14px;color:var(--muted)">
+      <strong>💡 缴费基数说明：</strong>以本人上年度月平均工资为基数，但不得低于当地社平工资的60%，不超过300%。各城市社平工资不同，缴费下限也不同。
+    </div>
+  </div>
+
+  <!-- 2025新规 -->
+  <div id="tab-change" class="tab-content">
+    <div class="change-list">
+      <div class="change-item">
+        <div class="change-dot dot-red"></div>
+        <div>
+          <strong>🔴 "放弃社保协议"一律无效（2025.9.1施行）</strong>
+          <p>最高法"解释（二）"第19条：无论劳动者签了什么，约定不缴社保的协议从法律上无效。劳动者可据此解除合同并索赔经济补偿。</p>
+        </div>
+      </div>
+      <div class="change-item">
+        <div class="change-dot dot-yellow"></div>
+        <div>
+          <strong>🟡 养老保险最低缴费年限逐步提高</strong>
+          <p>2030年起，最低缴费年限从15年逐步提高到20年，每年增加6个月，2039年达到20年。</p>
+        </div>
+      </div>
+      <div class="change-item">
+        <div class="change-dot dot-yellow"></div>
+        <div>
+          <strong>🟡 延迟退休逐步推进</strong>
+          <p>男性延迟至65岁，女性延迟至60岁（普通岗位），渐进式实施。</p>
+        </div>
+      </div>
+      <div class="change-item">
+        <div class="change-dot dot-blue"></div>
+        <div>
+          <strong>🔵 医保跨省异地就医直接结算全面实现</strong>
+          <p>普通门诊费用纳入统筹基金，报销比例≥50%。异地就医不用再跑腿报销。</p>
+        </div>
+      </div>
+      <div class="change-item">
+        <div class="change-dot dot-blue"></div>
+        <div>
+          <strong>🔵 工伤保险覆盖新业态</strong>
+          <p>外卖骑手、网约车司机等新业态从业人员纳入工伤保险覆盖范围。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 政策时间线 -->
+  <div id="tab-timeline" class="tab-content">
+    <div class="card">
+      <div class="timeline">
+        <div class="timeline-item red">
+          <div class="timeline-year">1995年</div>
+          <div class="timeline-text">《劳动法》施行，首次规定用人单位和劳动者必须依法参加社会保险<span class="timeline-tag tag-law">法律</span></div>
+        </div>
+        <div class="timeline-item red">
+          <div class="timeline-year">2011年</div>
+          <div class="timeline-text">《社会保险法》施行，明确五险强制参保<span class="timeline-tag tag-law">法律</span></div>
+        </div>
+        <div class="timeline-item yellow">
+          <div class="timeline-year">2021年</div>
+          <div class="timeline-text">社保政策六大新变化：养老金上调、医保门诊共济、灵活就业参保等<span class="timeline-tag tag-policy">政策</span></div>
+        </div>
+        <div class="timeline-item yellow">
+          <div class="timeline-year">2025-01</div>
+          <div class="timeline-text">多地调整社保缴费基数，灵活就业人员可60%-300%自主选择<span class="timeline-tag tag-policy">政策</span></div>
+        </div>
+        <div class="timeline-item red">
+          <div class="timeline-year">2025-08</div>
+          <div class="timeline-text">最高法发布《关于审理劳动争议案件适用法律问题的解释(二)》，共21条<span class="timeline-tag tag-law">司法解释</span></div>
+        </div>
+        <div class="timeline-item red">
+          <div class="timeline-year">2025-09-01</div>
+          <div class="timeline-text">"解释（二）"正式施行，"放弃社保协议"一律无效<span class="timeline-tag tag-law">司法</span></div>
+        </div>
+        <div class="timeline-item yellow">
+          <div class="timeline-year">2030年起</div>
+          <div class="timeline-text">养老保险最低缴费年限逐步从15年提高到20年（每年+6个月）<span class="timeline-tag tag-reform">改革</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2039年</div>
+          <div class="timeline-text">养老保险最低缴费年限达到20年<span class="timeline-tag tag-reform">改革</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 维权指南 -->
+  <div id="tab-rights" class="tab-content">
+    <div class="card">
+      <h3 style="margin-bottom:16px">⚖️ 劳动者维权路径</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center;margin-bottom:20px">
+        <div style="padding:16px;background:#f0fdf4;border-radius:12px">
+          <div style="font-size:24px;margin-bottom:6px">1️⃣</div>
+          <div style="font-weight:600;font-size:14px">协商</div>
+          <div style="font-size:12px;color:var(--muted)">与公司HR沟通</div>
+        </div>
+        <div style="padding:16px;background:#fefce8;border-radius:12px">
+          <div style="font-size:24px;margin-bottom:6px">2️⃣</div>
+          <div style="font-weight:600;font-size:14px">投诉</div>
+          <div style="font-size:12px;color:var(--muted)">拨打12333热线</div>
+        </div>
+        <div style="padding:16px;background:#eff6ff;border-radius:12px">
+          <div style="font-size:24px;margin-bottom:6px">3️⃣</div>
+          <div style="font-weight:600;font-size:14px">仲裁</div>
+          <div style="font-size:12px;color:var(--muted)">申请劳动仲裁</div>
+        </div>
+        <div style="padding:16px;background:#fef2f2;border-radius:12px">
+          <div style="font-size:24px;margin-bottom:6px">4️⃣</div>
+          <div style="font-weight:600;font-size:14px">起诉</div>
+          <div style="font-size:12px;color:var(--muted)">向法院起诉</div>
+        </div>
+      </div>
+      <div style="font-size:14px;color:var(--muted)">
+        <strong>📞 全国社保咨询热线：</strong>12333<br>
+        <strong>💡 关键提示：</strong>社保补缴不受1年仲裁时效限制（持续性违法行为）。保留好工资流水和社保记录是维权核心证据。
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">📜 法律依据</h3>
+      <div style="font-size:14px;padding:16px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--primary)">
+        <p style="margin-bottom:12px">🔴 "用人单位与劳动者约定或者劳动者向用人单位承诺无需缴纳社会保险费的，人民法院应当认定该约定或者承诺无效。"</p>
+        <p style="color:var(--muted);font-size:12px">— 最高法《关于审理劳动争议案件适用法律问题的解释(二)》第19条 [2025]</p>
+      </div>
+      <div style="font-size:14px;padding:16px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--primary);margin-top:12px">
+        <p style="margin-bottom:12px">🔴 "用人单位和劳动者必须依法参加社会保险，缴纳社会保险费。"</p>
+        <p style="color:var(--muted);font-size:12px">— 《劳动法》第72条 [1995]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: 社保计算器 -->
+<section id="calc">
+  <div class="section-title">🧮 社保计算器</div>
+  <div class="section-desc">输入月薪和城市，算出到手工资和企业成本</div>
+
+  <div class="card">
+    <div class="calc-form">
+      <div class="form-group">
+        <label>选择城市</label>
+        <select id="city">
+          <option value="beijing">北京</option>
+          <option value="shanghai">上海</option>
+          <option value="guangzhou">广州</option>
+          <option value="shenzhen">深圳</option>
+          <option value="chengdu">成都</option>
+          <option value="hangzhou">杭州</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>税前月薪（元）</label>
+        <input type="number" id="salary" placeholder="例：10000" value="10000">
+      </div>
+      <div class="form-group">
+        <label>公积金比例</label>
+        <select id="gjjRate">
+          <option value="5">5%</option>
+          <option value="7" selected>7%</option>
+          <option value="8">8%</option>
+          <option value="10">10%</option>
+          <option value="12">12%</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="calc-btn" onclick="calculate()">计算社保明细</button>
+      </div>
+    </div>
+
+    <div id="result" class="result">
+      <div class="result-grid">
+        <div class="result-stat">
+          <div class="val blue" id="r-takehome">—</div>
+          <div class="lbl">预计到手</div>
+        </div>
+        <div class="result-stat">
+          <div class="val orange" id="r-company">—</div>
+          <div class="lbl">企业成本</div>
+        </div>
+        <div class="result-stat">
+          <div class="val green" id="r-total">—</div>
+          <div class="lbl">五险一金合计</div>
+        </div>
+      </div>
+
+      <table class="detail-table">
+        <tr><th>险种</th><th>单位缴</th><th>个人缴</th><th>合计</th></tr>
+        <tbody id="detail-body"></tbody>
+        <tr class="total" id="detail-total"></tr>
+      </table>
+
+      <div class="card" style="margin-top:16px;background:#f8fafc;font-size:13px">
+        <strong>💰 到手工资计算：</strong><br>
+        <span id="calc-detail"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: AI 问答 -->
+<section id="ai" class="ai-section">
+  <div class="section-title" style="justify-content:center">🤖 AI 社保问答</div>
+  <div class="section-desc" style="text-align:center">其他社保问题？点击右下角 💬 随时提问</div>
+  <div class="ai-card">
+    <div class="ai-avatar">🏛️</div>
+    <h3>社保专家助手</h3>
+    <p>基于知识库的智能问答，支持政策解读、办理流程、待遇计算等专业咨询</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left;margin-top:20px">
+      <div style="padding:10px 14px;background:#f1f5f9;border-radius:8px;font-size:13px;cursor:pointer" onclick="openChat()">如何查询社保缴费记录？</div>
+      <div style="padding:10px 14px;background:#f1f5f9;border-radius:8px;font-size:13px;cursor:pointer" onclick="openChat()">养老金怎么计算？</div>
+      <div style="padding:10px 14px;background:#f1f5f9;border-radius:8px;font-size:13px;cursor:pointer" onclick="openChat()">异地社保怎么转移？</div>
+      <div style="padding:10px 14px;background:#f1f5f9;border-radius:8px;font-size:13px;cursor:pointer" onclick="openChat()">试用期不缴社保合法吗？</div>
+    </div>
+    <button class="ai-btn" onclick="openChat()" style="margin-top:20px">
+      💬 打开 AI 问答
+    </button>
+  </div>
+</section>
+
+<!-- Floating Chat Button -->
+<div id="chat-fab" onclick="openChat()" title="AI 社保问答">💬</div>
+
+<!-- Chat Panel -->
+<div id="chat-overlay" onclick="closeChat()"></div>
+<div id="chat-panel">
+  <div id="chat-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:16px">🏛️</div>
+      <div>
+        <div style="font-weight:600;font-size:14px">社保专家助手</div>
+        <div style="font-size:11px;opacity:.7">AI 智能问答</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="openFull()" title="新窗口打开" style="background:none;border:none;color:#fff;cursor:pointer;font-size:16px;opacity:.7">↗</button>
+      <button onclick="closeChat()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:20px;opacity:.7">&times;</button>
+    </div>
+  </div>
+  <iframe id="chat-iframe" src="about:blank" allow="clipboard-write"></iframe>
+  <div id="chat-fallback" style="display:none;padding:40px 24px;text-align:center">
+    <div style="font-size:40px;margin-bottom:16px">🤖</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:16px">由于浏览器安全策略限制，AI 问答需要在新窗口中打开</p>
+    <a href="https://www.doubao.com/bot/U0OxsVF9" target="_blank" rel="noopener" class="ai-btn" style="display:inline-flex">💬 打开 AI 问答</a>
+  </div>
+</div>
+
+<style>
+/* Chat FAB */
+#chat-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(59,130,246,.35);z-index:999;transition:.2s;border:none}
+#chat-fab:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(59,130,246,.45)}
+
+/* Overlay */
+#chat-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:1000;opacity:0;pointer-events:none;transition:.3s}
+#chat-overlay.show{opacity:1;pointer-events:auto}
+
+/* Chat Panel */
+#chat-panel{position:fixed;bottom:0;right:0;width:420px;height:85vh;max-height:700px;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -4px 40px rgba(0,0,0,.15);z-index:1001;transform:translateY(100%);transition:.35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
+#chat-panel.show{transform:translateY(0)}
+
+#chat-header{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+
+#chat-iframe{flex:1;border:none;width:100%}
+
+@media(max-width:480px){
+  #chat-panel{width:100%;height:100vh;max-height:100vh;border-radius:0}
+}
+</style>
+
+<!-- Footer -->
+<div style="text-align:center;padding:32px 20px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:20px">
+  数据仅供参考，以当地人社局公布为准 · 非法律意见 · 知识库数据截至 2025年9月
+</div>
+
+<script>
+// City params
+const cities={
+  beijing:{name:'北京',pension_u:.16,medical_u:.098,unemploy_u:.005,injury_u:.002,birth_u:.008,gjj_min:5,gjj_max:12,avg:11297,min:6326},
+  shanghai:{name:'上海',pension_u:.16,medical_u:.105,unemploy_u:.005,injury_u:.002,birth_u:.008,gjj_min:5,gjj_max:7,avg:12183,min:7310},
+  guangzhou:{name:'广州',pension_u:.14,medical_u:.055,unemploy_u:.0048,injury_u:.002,birth_u:.0085,gjj_min:5,gjj_max:12,avg:10792,min:5284},
+  shenzhen:{name:'深圳',pension_u:.16,medical_u:.052,unemploy_u:.007,injury_u:.002,birth_u:.005,gjj_min:5,gjj_max:12,avg:10792,min:4492},
+  chengdu:{name:'成都',pension_u:.16,medical_u:.067,unemploy_u:.006,injury_u:.002,birth_u:.008,gjj_min:5,gjj_max:12,avg:8491,min:4246},
+  hangzhou:{name:'杭州',pension_u:.16,medical_u:.055,unemploy_u:.005,injury_u:.002,birth_u:.005,gjj_min:5,gjj_max:12,avg:9817,min:4462}
+};
+
+const pension_p=.08, medical_p=.02, unemploy_p=.005;
+
+function calculate(){
+  const cityKey=document.getElementById('city').value;
+  const salary=parseFloat(document.getElementById('salary').value)||0;
+  const gjjRate=parseInt(document.getElementById('gjjRate').value)/100;
+  const c=cities[cityKey];
+
+  if(salary<=0){alert('请输入有效月薪');return}
+
+  // Base
+  const base=Math.max(c.min,Math.min(salary,c.avg*3));
+
+  // Each item
+  const pension_unit=base*c.pension_u, pension_person=base*pension_p;
+  const medical_unit=base*c.medical_u, medical_person=base*medical_p;
+  const unemploy_unit=base*c.unemploy_u, unemploy_person=base*unemploy_p;
+  const injury_unit=base*c.injury_u;
+  const birth_unit=base*c.birth_u;
+  const gjj_unit=base*gjjRate, gjj_person=base*gjjRate;
+
+  const total_unit=pension_unit+medical_unit+unemploy_unit+injury_unit+birth_unit+gjj_unit;
+  const total_person=pension_person+medical_person+unemploy_person+gjj_person;
+  const total=total_unit+total_person;
+
+  // Tax
+  const taxable=salary-total_person-5000;
+  let tax=0;
+  if(taxable>0){
+    if(taxable<=3000) tax=taxable*.03;
+    else if(taxable<=12000) tax=taxable*.1-210;
+    else if(taxable<=25000) tax=taxable*.2-1410;
+    else if(taxable<=35000) tax=taxable*.25-2660;
+    else if(taxable<=55000) tax=taxable*.3-4410;
+    else if(taxable<=80000) tax=taxable*.35-7160;
+    else tax=taxable*.45-15160;
+  }
+
+  const takehome=salary-total_person-tax;
+  const companyCost=salary+total_unit;
+
+  // Show result
+  document.getElementById('result').classList.add('show');
+  document.getElementById('r-takehome').textContent=takehome.toFixed(0)+' 元';
+  document.getElementById('r-company').textContent=companyCost.toFixed(0)+' 元';
+  document.getElementById('r-total').textContent=total.toFixed(0)+' 元';
+
+  // Detail table
+  const items=[
+    ['养老保险',pension_unit,pension_person],
+    ['医疗保险',medical_unit,medical_person],
+    ['失业保险',unemploy_unit,unemploy_person],
+    ['工伤保险',injury_unit,0],
+    ['生育保险',birth_unit,0],
+    ['住房公积金',gjj_unit,gjj_person]
+  ];
+  let html='';
+  items.forEach(r=>{
+    html+=`<tr><td>${r[0]}</td><td>${r[1].toFixed(0)}</td><td>${r[2].toFixed(0)}</td><td>${(r[1]+r[2]).toFixed(0)}</td></tr>`;
+  });
+  document.getElementById('detail-body').innerHTML=html;
+  document.getElementById('detail-total').innerHTML=`<td>合计</td><td>${total_unit.toFixed(0)}</td><td>${total_person.toFixed(0)}</td><td>${total.toFixed(0)}</td>`;
+
+  // Calc detail
+  document.getElementById('calc-detail').innerHTML=
+    `税前 ${salary} − 五险一金(个人) ${total_person.toFixed(0)} − 个税 ${tax.toFixed(1)} = <strong>到手 ${takehome.toFixed(0)} 元</strong><br>`+
+    `缴费基数 ${base.toFixed(0)} 元（${c.name}社平 ${c.avg}，最低基数 ${c.min}）`;
+
+  // Scroll to result
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// Tab switch
+function switchTab(el,id){
+  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  el.closest('section').querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// Smooth scroll
+function scrollTo(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.querySelector(`.nav-links a[href="#${id}"]`)?.classList.add('active');
+}
+
+// Chat panel
+let chatLoaded=false;
+function openChat(){
+  const overlay=document.getElementById('chat-overlay');
+  const panel=document.getElementById('chat-panel');
+  const iframe=document.getElementById('chat-iframe');
+  overlay.classList.add('show');
+  panel.classList.add('show');
+  document.getElementById('chat-fab').style.display='none';
+  if(!chatLoaded){
+    iframe.src='https://www.doubao.com/bot/U0OxsVF9';
+    chatLoaded=true;
+    // Fallback if iframe blocked by CSP
+    iframe.onerror=function(){
+      iframe.style.display='none';
+      document.getElementById('chat-fallback').style.display='block';
+    };
+    setTimeout(()=>{
+      try{iframe.contentWindow.location.href}catch(e){
+        iframe.style.display='none';
+        document.getElementById('chat-fallback').style.display='block';
+      }
+    },3000);
+  }
+}
+function closeChat(){
+  document.getElementById('chat-overlay').classList.remove('show');
+  document.getElementById('chat-panel').classList.remove('show');
+  document.getElementById('chat-fab').style.display='flex';
+}
+function openFull(){
+  window.open('https://www.doubao.com/bot/U0OxsVF9','_blank');
+}
+
+// Escape to close chat
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeChat()});
+
+// Auto calculate on load
+calculate();
+</script>
+</body>
+</html>
