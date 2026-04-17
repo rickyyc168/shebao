@@ -128,9 +128,9 @@ section{max-width:1100px;margin:0 auto;padding:40px 20px}
 <div class="nav-inner">
   <div class="nav-brand">🏛️ 社保速查</div>
   <div class="nav-links">
-    <a href="#guide" class="active" onclick="scrollTo('guide')">社保速查</a>
-    <a href="#calc" onclick="scrollTo('calc')">计算器</a>
-    <a href="#ai" onclick="scrollTo('ai')">AI 问答</a>
+    <a href="#guide" class="active" onclick="scrollToSection('guide')">社保速查</a>
+    <a href="#calc" onclick="scrollToSection('calc')">计算器</a>
+    <a href="#ai" onclick="scrollToSection('ai')">AI 问答</a>
   </div>
 </div>
 </nav>
@@ -140,15 +140,15 @@ section{max-width:1100px;margin:0 auto;padding:40px 20px}
   <h1>五险一金，<span>一目了然</span></h1>
   <p>社保政策速查 · 费用精准计算 · AI 智能问答</p>
   <div class="hero-cards">
-    <div class="hero-card" onclick="scrollTo('guide')">
+    <div class="hero-card" onclick="scrollToSection('guide')">
       <div class="icon">📋</div>
       <div class="label">社保速查</div>
     </div>
-    <div class="hero-card" onclick="scrollTo('calc')">
+    <div class="hero-card" onclick="scrollToSection('calc')">
       <div class="icon">🧮</div>
       <div class="label">社保计算器</div>
     </div>
-    <div class="hero-card" onclick="scrollTo('ai')">
+    <div class="hero-card" onclick="scrollToSection('ai')">
       <div class="icon">🤖</div>
       <div class="label">AI 问答</div>
     </div>
@@ -563,7 +563,7 @@ function switchTab(el,id){
 }
 
 // Smooth scroll
-function scrollTo(id){
+function scrollToSection(id){
   document.getElementById(id).scrollIntoView({behavior:'smooth'});
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   document.querySelector(`.nav-links a[href="#${id}"]`)?.classList.add('active');
